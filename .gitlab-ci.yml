@@ -1,0 +1,28 @@
+---
+
+image: 'docker:19.03.1'
+
+stages:
+    - build
+    - deploy
+
+before_script:
+    - 'apk update'
+    - 'apk upgrade'
+    - 'apk add make'
+
+build:
+    stage: build
+    script:
+        - 'make build'
+
+deploy:
+    stage: deploy
+    script:
+        - 'echo $PASSWORD_DOCKER_HUB | docker login -u ditrit --password-stdin'
+        - 'make push'
+    when: manual
+    only:
+        - 'master'
+
+...
